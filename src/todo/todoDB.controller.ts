@@ -5,18 +5,23 @@ import {
   Get,
   Param,
   Patch,
-  Post, Query,
-  Req
-} from "@nestjs/common";
+  Post,
+  Query,
+  Req,
+} from '@nestjs/common';
 import { Todo } from './Model/todo.model';
 import { Request } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { TodoService } from './todo.service';
 import { TodoEntity } from './Entity/todo.entity';
 import { UpdateTodoDto } from './update-todo.dto';
-import { UpdateResult } from "typeorm/query-builder/result/UpdateResult";
-import { DeleteResult } from "typeorm/query-builder/result/DeleteResult";
-import { SearchTodoDto } from "./dto/search-todo.dto";
+import { UpdateResult } from 'typeorm/query-builder/result/UpdateResult';
+import { DeleteResult } from 'typeorm/query-builder/result/DeleteResult';
+import { SearchTodoDto } from './dto/search-todo.dto';
+import { GetTodoDto } from './dto/get-todo.dto';
+import { PaginationDto } from './dto/pagination.dto';
+import { TodoStatusEnum } from './enums/todo-status.enum';
+import { DateIntervalDto } from './dto/date-interval.dto';
 @Controller({
   path: 'todo',
   version: '2',
@@ -54,5 +59,22 @@ export class TodoDBController {
   @Get('version')
   version() {
     return '2';
+  }
+  @Get('exercice229')
+  getAllWithQuery(@Query() getTodoDTO: GetTodoDto): Promise<TodoEntity[]> {
+    return this.todoService.findAllWithQueryBuilder(getTodoDTO);
+  }
+  @Get('exercice233')
+  getAllWithPagination(
+    @Query() paginationDto: PaginationDto,
+  ): Promise<TodoEntity[]> {
+    return this.todoService.findAllWithPagination(paginationDto);
+  }
+  @Get('exercice236/:status')
+  getStatusStats(
+    @Param('status') status: TodoStatusEnum,
+    @Body() dateInterval: DateIntervalDto,
+  ) {
+    return this.todoService.numberTodosForStatus(status, dateInterval);
   }
 }

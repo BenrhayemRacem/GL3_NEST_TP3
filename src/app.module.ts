@@ -22,7 +22,7 @@ import { TodoEntity } from "./todo/Entity/todo.entity";
       port: 3306,
       username: 'root',
       password: '',
-      database: 'gl322',
+      database: 'gl3_tp_web',
       autoLoadEntities: true,
       synchronize: true,
       debug: true,
